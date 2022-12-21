@@ -3,3 +3,4 @@ RPi automated monitor of internet connection, reports speedtest and ping results
 Refer to the code for operational instructions, database information, and configuration instructions.
 
 Refer to Instructables.com for the build project, The Internet Monitor. 
+https://www.instructables.com/The-Internet-Monitor/
