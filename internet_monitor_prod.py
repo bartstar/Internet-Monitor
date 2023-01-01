@@ -4,15 +4,10 @@
 # Inspired by and loosly based on Instructables.com version 0.4 by HoChri (aka Legufix)
 # Setup for LED touch screen, resolution 1280 x 768
 #
-# Version v-1.02.1010.22 Current version adds option for turning on/off logging in configuration menu
+# Version v-1.04.23.0101 Current version corrects error in storing database values at midnight
 # This is written in Python 3
 # Version 1 is production version
-# Version 0.9 changes 30-day bar chart to show upload speeds instead of ping times. 24 hour upload speeds added to database
-# Version 0.8 adds ping checks every minute and if ping fails, it will automatically try a speedtest
-# Version 0.7 adds configuration menu
-# Version 0.6 is incremental improvements over version 5
-# Version 0.5 is first stable product
-# By Bart
+# By BartStar
 #
 # Database (internet_mon.db) is linear text data with each line a datapoint. Database is needed to hold configuration parameters and
 # history of speedtests. Data stored is as follows, each representing a line in the textual database. Since data is in text format
@@ -98,7 +93,7 @@
 #    Enter the following line in the file as the last lin:
 #        @sudo lxterminal -e /usr/bin/python3 /home/pi/internet_monitor_prod.py
 #    Delete or rename autostart file at .config/lxsession/LXDE-pi, otherwise the autostart file at /etc/xdg ... will not run (the one at .config ...) doesn't have
-#    root privaleges. The Internet Monitor program will fail if run from this location. 
+#    root privaleges. The Bandwidth Monitor program will fail if run from this location. 
 # ******************************************************************************/
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documnetation files (the "Software"), to deal
@@ -234,8 +229,8 @@ GPIO.output(RED, GPIO.LOW)
 
 # Setup Ubidots information
 post = False #True if successful upload to Ubidots, False if unsuccessful upload
-TOKEN = "XXXX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Token for Ubidots access
-DEVICE_LABEL = "internet-monitor"  # Put your device label here
+TOKEN = "BBFF-GFPFhG0XXeL1I8IBJPRFL59ZtX1kZR"  # Token for Ubidots access
+DEVICE_LABEL = "raspberry-bandwidth-monitor"  # Put your device label here
 VARIABLE_LABEL_1 = "Upload"  # Put your first variable label here
 VARIABLE_LABEL_2 = "Download"  # Put your second variable label here
 VARIABLE_LABEL_3 = "Ping"  # Put your third variable label here
@@ -565,9 +560,9 @@ def update_speedtest():  # Overall speedtest function, includes sub functions to
         if loggingfile: logging.debug('TDF-Hour = %s, Min = %s', houroftest, minoftest)
         minindex = 0
         if (0 <= minoftest <= 29):
-            minindex = 1
+            minindex = 0
         elif (30 <= minoftest <= 59):
-            minindex = 2
+            minindex = 1
         dbindex = houroftest*2 + minindex # One test approx every 30 min = 2 tests per hour
         if (last_dbindex > dbindex):
             if (last_dbindex < 48):
@@ -760,7 +755,7 @@ def update_speedtest():  # Overall speedtest function, includes sub functions to
             logging.info('Program summary: last download speed = %d MBPS, last upload speed = %d MBPS',bw_down, bw_up)
             logging.info('Program summary: average download last 24 hrs = %d, average upload = %d MBPS',adl24, adu24)
             logging.info('Program summary: internet is down? %s',internet_down)
-            logging.info('Program summary: historical data for last 24 hours and last 30 days are recorded in internet_mon.db')
+            logging.info('Program summary: historical data for last 24 hours and last 30 days are recorded in bandwidth3.db')
             logging.info('Program summary: thread list before starting monitor = %s',str(threading.enumerate()))
             if goodping:
                 logging.info('Program summary: pings to Google at last attempt were working fine')
